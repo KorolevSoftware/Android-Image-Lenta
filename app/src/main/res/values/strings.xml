@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Lenta</string>
+    <string name="image_transition">transition:image</string>
+    <string name="image_like_transition">transition:image_like</string>
+</resources>
