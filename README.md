@@ -1,4 +1,4 @@
-# Android Image Lenta
+# Lenta
 
 Simple Android aplication for infinity scroll image by [Flickr] and save like data in device local storage.
 I using AndroidX paging, like this video:
@@ -9,7 +9,9 @@ I using AndroidX paging, like this video:
 but use only Java.
 
 
-![Demo video](demo/video1.gif)
+![Demo video](demo/scroll.gif)
+![Demo video](demo/like.gif)
+![Demo video](demo/imageview.gif)
 
 **Use libs:**
 - [Flickr4Java]

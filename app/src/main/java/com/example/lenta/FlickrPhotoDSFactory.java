@@ -4,11 +4,11 @@ import androidx.paging.DataSource;
 
 public class FlickrPhotoDSFactory extends DataSource.Factory<Integer, FlickrPhoto> {
 
-    private final FlickrDAO flickrDAO;
-    private final FlickrPositionDataSource flickrPositionDataSource;
-    FlickrPhotoDSFactory(FlickrDAO flickrDAO) {
-        this.flickrDAO = flickrDAO;
-        this.flickrPositionDataSource = new FlickrPositionDataSource(flickrDAO);
+    private final FlickrDataSource flickrDataSource;
+    private FlickrPositionDataSource flickrPositionDataSource;
+    public FlickrPhotoDSFactory(FlickrDataSource flickrDataSource) {
+        this.flickrDataSource = flickrDataSource;
+        this.flickrPositionDataSource = new FlickrPositionDataSource(flickrDataSource);
     }
 
     public void invalidate()
@@ -16,9 +16,9 @@ public class FlickrPhotoDSFactory extends DataSource.Factory<Integer, FlickrPhot
         flickrPositionDataSource.invalidate();
     }
 
-
     @Override
     public DataSource create() {
+        flickrPositionDataSource =  new FlickrPositionDataSource(flickrDataSource);
         return flickrPositionDataSource;
     }
 }

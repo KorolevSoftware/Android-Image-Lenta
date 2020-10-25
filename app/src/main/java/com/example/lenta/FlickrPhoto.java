@@ -1,37 +1,47 @@
 package com.example.lenta;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-public class FlickrPhoto implements Parcelable {
-    private String urlSmallImage;
-    private String urlMediumImage;
-    private Bitmap image;
-    private String id;
-    private FlickrLSSetter likeSetter;
 
-    public FlickrPhoto(String urlSmallImage, String urlMediumImage, Bitmap image, String id, int isLike, FlickrLSSetter likeSetter) {
-        this.urlSmallImage = urlSmallImage;
-        this.urlMediumImage = urlMediumImage;
-        this.image = image;
+@Entity
+public class FlickrPhoto extends BaseObservable implements Parcelable {
+
+    @PrimaryKey
+    private long id;
+    private int isLike;
+
+    @Ignore
+    private String smallUrl;
+
+    public FlickrPhoto(long id, int isLike) {
         this.id = id;
-        this.likeSetter = likeSetter;
+        this.isLike = isLike;
+    }
+
+    public FlickrPhoto(String smallUrl, long id, int isLike) {
+        this.smallUrl = smallUrl;
+        this.isLike = isLike;
+        this.id = id;
     }
 
     protected FlickrPhoto(Parcel in) {
-        urlSmallImage = in.readString();
-        urlMediumImage = in.readString();
-        id = in.readString();
-        image = in.readParcelable(Bitmap.class.getClassLoader());
+        id = in.readLong();
+        isLike = in.readInt();
+        smallUrl = in.readString();
     }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(urlSmallImage);
-        dest.writeString(urlMediumImage);
-        dest.writeString(id);
-        dest.writeParcelable(image, flags);
+        dest.writeLong(id);
+        dest.writeInt(isLike);
+        dest.writeString(smallUrl);
     }
 
     public static final Creator<FlickrPhoto> CREATOR = new Creator<FlickrPhoto>() {
@@ -46,39 +56,42 @@ public class FlickrPhoto implements Parcelable {
         }
     };
 
-    public String getUrlSmallImage() {
-        return urlSmallImage;
+    @Bindable
+    public String getSmallUrl() {
+        return smallUrl;
     }
 
-    public String getUrlMediumImage() {
-        return urlMediumImage;
-    }
-
-    public Bitmap getImage() {
-        return image;
-    }
-
-    public String getId() {
+    @Bindable
+    public long getId() {
         return id;
     }
 
-    public boolean hasLike()
-    {
-        return likeSetter.hasLike(getId());
+    @Bindable
+    public int getIsLike() {
+        return isLike;
     }
-    public boolean cklickLike()
+    
+    public FlickrPhoto( FlickrPhoto other)
     {
-
-        if(hasLike())
-            likeSetter.likeDisable(getId());
-        else
-            likeSetter.likeEnable(getId());
-
-        return hasLike();
+        this(other.getSmallUrl(), other.getId(), other.getIsLike());
+    }
+    
+    public boolean hasLike() {
+        return isLike > 0;
     }
 
-    public void setLikeSetter(FlickrLSSetter likeSetter) {
-        this.likeSetter = likeSetter;
+    public void setSmallUrl(String smallUrl) {
+        this.smallUrl = smallUrl;
+    }
+
+    public boolean cklickLike() {
+        if (isLike == 1)
+            isLike = 0;
+        else if (isLike == 0)
+            isLike = 1;
+        notifyPropertyChanged(BR._all);
+
+        return isLike > 0;
     }
 
     @Override

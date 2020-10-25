@@ -1,11 +1,19 @@
 package com.example.lenta;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
+import android.util.Log;
 
-public class ImageActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
+import com.example.lenta.databinding.ActivityImageBinding;
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrListener;
+import com.r0adkll.slidr.model.SlidrPosition;
+
+public class ImageActivity extends AppCompatActivity implements SlidrListener {
     private FlickrPhoto photo;
 
     @Override
@@ -13,30 +21,47 @@ public class ImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-        ImageView image = findViewById(R.id.image);
-        ImageView imageLike = findViewById(R.id.image_like);
+        // Setup swipe back
+        SlidrConfig.Builder slidrConfig = new SlidrConfig.Builder();
+        slidrConfig.position(SlidrPosition.VERTICAL);
+        slidrConfig.scrimColor(getResources().getColor(R.color.transparent));
+        slidrConfig.scrimStartAlpha(0);
+        slidrConfig.listener(this);
+        Slidr.attach(this, slidrConfig.build());
 
         Bundle arguments = getIntent().getExtras();
         if(arguments == null)
             return;
-        photo = (FlickrPhoto) arguments.getParcelable("photo");
-        image.setImageBitmap(photo.getImage());
-        LocalStorage localStorage = new LocalStorage(this);
-        photo.setLikeSetter(new FlickrLSSetter(localStorage.getWritableDatabase()));
 
-        imageLike.setOnClickListener(this::onClick);
-
-        if(photo.hasLike())
-            imageLike.setImageResource(R.drawable.ic_like_enable);
-        else
-            imageLike.setImageResource(R.drawable.ic_like_disable);
+        photo = arguments.getParcelable("photo");
+        ActivityImageBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_image);
+        binding.setFlickrPhoto(photo); // Data in layout
     }
 
-    private void onClick(View v) {
-        ImageView imageLike = (ImageView)v;
-        if(photo.cklickLike())
-            imageLike.setImageResource(R.drawable.ic_like_enable);
-        else
-            imageLike.setImageResource(R.drawable.ic_like_disable);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent();
+        intent.putExtra("photo", photo);
+        setResult(MainActivity.RESULT_CANCELED, intent);
     }
+
+    @Override
+    public void onSlideClosed()
+    {
+        onBackPressed();
+    }
+
+    @Override
+    public void onSlideChange(float percent) {
+        if(percent < 0.7f)
+            onBackPressed();
+        Log.w("percent", String.valueOf(percent));
+    }
+
+    @Override
+    public void onSlideOpened() {}
+
+    @Override
+    public void onSlideStateChanged(int state) {}
 }

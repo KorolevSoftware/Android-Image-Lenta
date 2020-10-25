@@ -2,4 +2,6 @@
     <string name="app_name">Lenta</string>
     <string name="image_transition">transition:image</string>
     <string name="image_like_transition">transition:image_like</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
