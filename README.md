@@ -41,7 +41,7 @@ Placeholder image get in [flaticon]:
   alt="Cat">
 </p>
 
-- [Deeplink] Deep link
+- [Deeplink]
 
 [FlickrApi]: <https://www.flickr.com/services/apps/create/>
 [Flickr]: <https://www.flickr.com/>
@@ -52,4 +52,4 @@ Placeholder image get in [flaticon]:
 [Android Jetpack: manage infinite lists with RecyclerView and Paging]: <https://www.youtube.com/watch?v=BE5bsyGGLf4>
 
 
-[Deeplink]: <myapp://myhost>
+[Deeplink]: <http://myhost>
