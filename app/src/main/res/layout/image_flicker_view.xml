@@ -30,7 +30,7 @@
 
             <ImageView
                 android:id="@+id/image"
-                bind:imageUrl="@{flickrPhoto.smallUrl}"
+                bind:imageUrl="@{flickrPhoto.getQuadImageUrl()}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"

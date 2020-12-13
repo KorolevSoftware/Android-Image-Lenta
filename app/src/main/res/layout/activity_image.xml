@@ -31,7 +31,7 @@
                 android:adjustViewBounds="true"
 
                 android:transitionName="@string/image_transition"
-                bind:imageUrl="@{flickrPhoto.smallUrl}" />
+                bind:imageUrl="@{flickrPhoto.getMediumImageUrl()}" />
 
             <ImageView
                 android:layout_width="50dp"

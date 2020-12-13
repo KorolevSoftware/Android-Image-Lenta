@@ -16,31 +16,34 @@ public class Repository {
     private final LiveData< PagedList<FlickrPhoto>> pagedListLiveData;
     private final FlickrPhotoDSFactory dataSourceFactory;
 
-    public Repository(@NonNull Application application)
+    public Repository(@NonNull Application application, int startPosition)
     {
         dataBase = Room.databaseBuilder(application,
                 LocalDataBase.class, "database")
                 .fallbackToDestructiveMigrationFrom(1) // BD version
                 .build();
 
-        FlickrDataSource dao = new FlickrDataSource(dataBase);
+
+        IPhotoDataSource dao = new FlickrDataSourceRetrofit(application);
         dao.setSearchTile("cat"); // Search cat image
 
-        dataSourceFactory = new FlickrPhotoDSFactory(dao);
+        dataSourceFactory = new FlickrPhotoDSFactory(dao, dataBase);
 
         PagedList.Config config = new PagedList.Config
                 .Builder()
                 .setMaxSize(500)              // Element count for dropped old page //Memory optimization
                 .setEnablePlaceholders(false) // Use infinity scroll you dont know element count
-                .setPageSize(40)              // Element count in page
+                .setPageSize(50)              // Element count in page
+                .setInitialLoadSizeHint(50)
                 .build();
 
         pagedListLiveData = new LivePagedListBuilder<>(dataSourceFactory, config)
                 .setFetchExecutor(Executors.newSingleThreadExecutor()) //Load data from another thread
+                .setInitialLoadKey(startPosition)
                 .build();
     }
 
-    public LiveData<PagedList<FlickrPhoto>> getPagedListLiveData() {
+    public LiveData< PagedList<FlickrPhoto>> getPagedListLiveData() {
         return pagedListLiveData;
     }
 

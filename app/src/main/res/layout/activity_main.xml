@@ -3,11 +3,18 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
-<LinearLayout
 
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="visible"
+        android:layout_centerInParent="true"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/image_scroll_view"
@@ -15,5 +22,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</LinearLayout>
+</RelativeLayout>
 </layout>

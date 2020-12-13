@@ -1,47 +1,46 @@
 package com.example.lenta;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.google.gson.annotations.SerializedName;
 
 
 @Entity
 public class FlickrPhoto extends BaseObservable implements Parcelable {
 
     @PrimaryKey
+    @SerializedName("id")
     private long id;
     private int isLike;
 
-    @Ignore
-    private String smallUrl;
+    @SerializedName("secret")
+    private String secret;
 
-    public FlickrPhoto(long id, int isLike) {
-        this.id = id;
-        this.isLike = isLike;
-    }
 
-    public FlickrPhoto(String smallUrl, long id, int isLike) {
-        this.smallUrl = smallUrl;
+    public FlickrPhoto(long id, int isLike, String secret) {
         this.isLike = isLike;
         this.id = id;
+        this.secret = secret;
     }
 
     protected FlickrPhoto(Parcel in) {
         id = in.readLong();
         isLike = in.readInt();
-        smallUrl = in.readString();
+        secret = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeInt(isLike);
-        dest.writeString(smallUrl);
+        dest.writeString(secret);
     }
 
     public static final Creator<FlickrPhoto> CREATOR = new Creator<FlickrPhoto>() {
@@ -56,9 +55,25 @@ public class FlickrPhoto extends BaseObservable implements Parcelable {
         }
     };
 
+    public void setIsLike(int isLike) {
+        this.isLike = isLike;
+    }
+
+    @SuppressLint("DefaultLocale")
     @Bindable
-    public String getSmallUrl() {
-        return smallUrl;
+    public String getQuadImageUrl() {
+        return String.format("https://live.staticflickr.com/7023/%d_%s_q.jpg", id, secret);
+       
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Bindable
+    public String getMediumImageUrl() {
+        return String.format("https://live.staticflickr.com/7023/%d_%s_m.jpg", id, secret);
+
+    }
+    public String getSecret() {
+        return secret;
     }
 
     @Bindable
@@ -73,15 +88,11 @@ public class FlickrPhoto extends BaseObservable implements Parcelable {
     
     public FlickrPhoto( FlickrPhoto other)
     {
-        this(other.getSmallUrl(), other.getId(), other.getIsLike());
-    }
-    
-    public boolean hasLike() {
-        return isLike > 0;
+        this(other.getId(), other.getIsLike(), other.getSecret());
     }
 
-    public void setSmallUrl(String smallUrl) {
-        this.smallUrl = smallUrl;
+    public boolean hasLike() {
+        return isLike > 0;
     }
 
     public boolean cklickLike() {

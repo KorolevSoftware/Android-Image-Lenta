@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +38,8 @@ public class ImageScrollAdapter extends PagedListAdapter<FlickrPhoto, ImageScrol
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+
+
         FlickrPhoto photo = new FlickrPhoto(getItem(position));
         Log.w("itemCount", String.valueOf(getItemCount()));
 
